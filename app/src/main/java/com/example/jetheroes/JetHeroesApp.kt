@@ -24,20 +24,25 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.jetheroes.model.HeroesData
+import com.example.jetheroes.data.HeroRepository
 import com.example.jetheroes.ui.theme.JetHeroesTheme
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun JetHeroesApp(modifier: Modifier = Modifier) {
+fun JetHeroesApp(
+    modifier: Modifier = Modifier,
+    viewModel: JetHeroesViewModel = androidx.lifecycle.viewmodel.compose.viewModel(
+        factory = ViewModelFactory(HeroRepository())
+    )
+) {
     Box(modifier = modifier) {
         val scope = rememberCoroutineScope()
         val listState = rememberLazyListState()
         val showButton: Boolean by remember {
             derivedStateOf { listState.firstVisibleItemIndex > 0 }
         }
-        val groupedHeader = HeroesData.heroes.sortedBy { it.name }.groupBy { it.name[0] }
+        val groupedHeader by viewModel.groupedHeroes.collectAsState()
         LazyColumn(state = listState, contentPadding = PaddingValues(bottom = 80.dp)) {
             groupedHeader.forEach { (initial, heroes) ->
                 stickyHeader {
