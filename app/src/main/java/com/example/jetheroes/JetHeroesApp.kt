@@ -11,7 +11,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,10 +31,10 @@ fun JetHeroesApp(modifier: Modifier = Modifier) {
     Box(modifier = modifier) {
         val scope = rememberCoroutineScope()
         val listState = rememberLazyListState()
-        val showButton : Boolean by remember {
+        val showButton: Boolean by remember {
             derivedStateOf { listState.firstVisibleItemIndex > 0 }
         }
-        LazyColumn(state = listState) {
+        LazyColumn(state = listState, contentPadding = PaddingValues(bottom = 80.dp)) {
             items(HeroesData.heroes, key = { it.id }) { hero ->
                 HeroListItem(
                     name = hero.name,
@@ -100,7 +99,7 @@ fun ScrollToTopButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
             contentColor = MaterialTheme.colors.primary
         )
     ) {
-        Icon(imageVector = Icons.Filled.KeyboardArrowUp, contentDescription =null)
+        Icon(imageVector = Icons.Filled.KeyboardArrowUp, contentDescription = null)
     }
 }
 
